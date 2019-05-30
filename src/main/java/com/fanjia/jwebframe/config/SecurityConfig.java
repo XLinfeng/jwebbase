@@ -25,26 +25,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     UserService userService;
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/static/**","/test").permitAll()
+                .antMatchers("/static/**").permitAll()
+                .and()
+                .formLogin().loginPage("/login").permitAll()
+                .loginProcessingUrl("/login/process").permitAll().usernameParameter("username").passwordParameter("password")
+                .and()
+                .logout().logoutUrl("/logout").permitAll().clearAuthentication(true).invalidateHttpSession(true).logoutSuccessUrl("/login")
                 .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
                     @Override
-                    public <O extends FilterSecurityInterceptor> O postProcess(O object){
+                    public <O extends FilterSecurityInterceptor> O postProcess(O object) {
                         object.setSecurityMetadataSource(cfisms());
                         object.setAccessDecisionManager(cadm());
                         return object;
                     }
-                })
-                .and()
-                .formLogin().loginPage("/login").loginProcessingUrl("/login/process").usernameParameter("username").passwordParameter("password").permitAll()
-                .and()
-                .logout().logoutUrl("/logout").clearAuthentication(true).invalidateHttpSession(true).logoutSuccessUrl("/login").permitAll();
+                });
         /*http.authorizeRequests()
                 .antMatchers("/static/**","/test").permitAll()
                 .anyRequest().authenticated()
@@ -58,21 +59,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 指定密码加密码方式
+     *
      * @return
      */
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
 
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public CustomFilterinvocationSecurityMetadataSource cfisms(){
+    public CustomFilterinvocationSecurityMetadataSource cfisms() {
         return new CustomFilterinvocationSecurityMetadataSource();
     }
 
     @Bean
-    public CustomAccessDecisionManager cadm(){
+    public CustomAccessDecisionManager cadm() {
         return new CustomAccessDecisionManager();
     }
 }

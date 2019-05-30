@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fanjia.jwebframe.admin.mapper.MenuMapper">
+    <resultMap id="BaseResultMap" type="com.fanjia.jwebframe.admin.entity.Menu">
+        <id property="id" column="id" />
+        <result property="pattern" column="pattern" />
+        <collection property="roles" column="rid" ofType="com.fanjia.jwebframe.admin.entity.Role">
+            <id property="id" column="rid" />
+            <result property="roleCode" column="rolecode" />
+            <result property="roleName" column="rolename" />
+        </collection>
+    </resultMap>
+    <select id="getAllMenus" resultMap="BaseResultMap">
+        SELECT m.*,r.id as rid,r.roleCode as rolecode,r.roleName as rolename from menu m LEFT JOIN menu_role mr
+            on m.id = mr.mid
+            LEFT JOIN role r
+            on
+            mr.rid = r.id
+    </select>
+</mapper>

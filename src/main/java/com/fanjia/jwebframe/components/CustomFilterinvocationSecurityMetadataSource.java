@@ -28,7 +28,7 @@ public class CustomFilterinvocationSecurityMetadataSource implements FilterInvoc
     @Override
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
         String requestUrl = ((FilterInvocation) o).getRequestUrl();
-        List<Menu> allmenus = menuMapper.selectList(new QueryWrapper<Menu>());
+        List<Menu> allmenus = menuMapper.getAllMenus();
         for (Menu menu:allmenus){
             if(antPathMatcher.match(menu.getPattern(),requestUrl)){
                 List<Role> roles = menu.getRoles();

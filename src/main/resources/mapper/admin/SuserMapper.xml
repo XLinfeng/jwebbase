@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fanjia.jwebframe.admin.mapper.SuserMapper">
+
+    <select id="loadUserByUsername" resultType="com.fanjia.jwebframe.admin.entity.Suser">
+        select * from suser where username=#{username}
+    </select>
+    <select id="getUserRolesByUid" resultType="com.fanjia.jwebframe.admin.entity.Role">
+        select * from role r,suser_role ur where r.id=ur.rid and ur.uid=#{id}
+    </select>
+</mapper>
